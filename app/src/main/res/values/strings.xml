@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">ReversiChampion</string>
+
+
+    <string name="test">ReversiChampion</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="side_blank">o</string>
+
+
+</resources>

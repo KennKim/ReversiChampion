@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="activity"
+            type="reversi.project.tki.reversichampion.board.BoardActivity" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="reversi.project.tki.reversichampion.board.BoardActivity">
+
+        <TableLayout
+            android:id="@+id/tableLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <reversi.project.tki.reversichampion.util.SquareImageView
+                    android:id="@+id/iv_aa01"
+                    style="@style/ivStone"
+                    android:onClick="@{activity::onClickIV}"
+                    tools:background="@drawable/frame_loading" />
+
+
+                <reversi.project.tki.reversichampion.util.SquareImageView
+                    android:id="@+id/iv_aa02"
+                    style="@style/ivStone"
+                    android:onClick="@{activity::onClickIV}"
+                    tools:src="@drawable/frame_loading" />
+
+
+                <reversi.project.tki.reversichampion.util.SquareImageView
+                    android:id="@+id/iv_aa03"
+                    style="@style/ivStone"
+                    android:onClick="@{activity::onClickIV}"
+                    tools:src="@drawable/frame_loading" />
+
+
+                <reversi.project.tki.reversichampion.util.SquareImageView
+                    android:id="@+id/iv_aa04"
+                    style="@style/ivStone"
+                    android:onClick="@{activity::onClickIV}"
+                    tools:src="@drawable/frame_loading" />
+
+
+                <reversi.project.tki.reversichampion.util.SquareImageView
+                    android:id="@+id/iv_aa05"
+                    style="@style/ivStone"
+                    android:onClick="@{activity::onClickIV}"
+                    tools:src="@drawable/frame_loading" />
+
+
+                <reversi.project.tki.reversichampion.util.SquareImageView
+                    android:id="@+id/iv_aa06"
+                    style="@style/ivStone"
+                    android:onClick="@{activity::onClickIV}"
+                    tools:src="@drawable/frame_loading" />
+
+
+                <reversi.project.tki.reversichampion.util.SquareImageView
+                    android:id="@+id/iv_aa07"
+                    style="@style/ivStone"
+                    android:onClick="@{activity::onClickIV}"
+                    tools:src="@drawable/frame_loading" />
+
+
+                <reversi.project.tki.reversichampion.util.SquareImageView
+                    android:id="@+id/iv_aa08"
+                    style="@style/ivStone"
+                    android:onClick="@{activity::onClickIV}"
+                    tools:src="@drawable/frame_loading" />
+
+            </TableRow>
+
+
+        </TableLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>

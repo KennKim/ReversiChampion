@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="fragment"
+            type="reversi.project.tki.reversichampion.frag.FieldFragment" />
+    </data>
+
+
+    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="reversi.project.tki.reversichampion.frag.FieldFragment">
+
+
+
+        <LinearLayout
+            android:id="@+id/linearVer"
+            android:layout_width="match_parent"
+            android:background="#123123"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <!--
+                        &lt;!&ndash; TODO: Update blank fragment layout &ndash;&gt;
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="@string/hello_blank_fragment" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/linear"
+                            android:orientation="horizontal">
+
+                            <android.support.constraint.ConstraintLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1">
+
+                                <reversi.project.tki.reversichampion.util.SquareImageView
+                                    style="@style/ivStoneField"
+                                    android:onClick="@{fragment::onClickStone}"
+                                    tools:src="@drawable/frame_black" />
+
+                                <TextView
+                                    android:id="@+id/tv"
+                                    style="@style/tvNumber" />
+                            </android.support.constraint.ConstraintLayout>
+
+
+
+
+                        </LinearLayout>-->
+
+        </LinearLayout>
+
+
+    </android.support.design.widget.CoordinatorLayout>
+</layout>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+
+        <variable
+            name="holder"
+            type="reversi.project.tki.reversichampion.ground.GroundAdapter.GroundViewHolder" />
+
+        <variable
+            name="stone"
+            type="reversi.project.tki.reversichampion.model.Stone" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="0.1dp"
+        android:background="#324b30">
+
+        <reversi.project.tki.reversichampion.util.SquareImageView
+            android:id="@+id/iv"
+            style="@style/ivStoneRv"
+            android:layout_centerInParent="true"
+            tools:src="@drawable/ic_unstar" />
+
+           <TextView
+               android:id="@+id/tv"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:gravity="center"
+               android:layout_centerInParent="true"
+               android:text="@{Integer.toString(stone.position)}"
+               android:textColor="#b91078"
+               android:textSize="12sp"
+               tools:text="35" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/tvSide"
+                    tools:text="101"
+                    android:text="@{stone.sideItem.get(0).stone==115?@string/side_blank:stone.sideItem.get(0).stone.toString()}" />
+                <TextView
+                    style="@style/tvSide"
+                    tools:text="101"
+                    android:text="@{stone.sideItem.get(1).stone==115?@string/side_blank:stone.sideItem.get(1).stone.toString()}" />
+                <TextView
+                    style="@style/tvSide"
+                    tools:text="101"
+                    android:text="@{stone.sideItem.get(2).stone==115?@string/side_blank:stone.sideItem.get(2).stone.toString()}" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/tvSide"
+                    tools:text="101"
+                    android:textColor="#56c2a6"
+                    android:layout_margin="8dp"
+                    android:gravity="start"
+                    android:text="@{stone.sideItem.get(3).stone==115?@string/side_blank:stone.sideItem.get(3).stone.toString()}" />
+                <TextView
+                    style="@style/tvSide"
+                    android:gravity="end"
+                    android:textColor="#56c2a6"
+                    android:layout_margin="8dp"
+                    tools:text="101"
+                    android:text="@{stone.sideItem.get(4).stone==115?@string/side_blank:stone.sideItem.get(4).stone.toString()}" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_gravity="bottom"
+                android:gravity="bottom"
+                android:layout_height="wrap_content">
+                <TextView
+                    style="@style/tvSide"
+                    tools:text="101"
+                    android:text="@{stone.sideItem.get(5).stone==115?@string/side_blank:stone.sideItem.get(5).stone.toString()}" />
+
+                <TextView
+                    style="@style/tvSide"
+                    tools:text="101"
+                    android:text="@{stone.sideItem.get(6).stone==115?@string/side_blank:stone.sideItem.get(6).stone.toString()}" />
+                <TextView
+                    style="@style/tvSide"
+                    tools:text="101"
+                    android:text="@{stone.sideItem.get(7).stone==115?@string/side_blank:stone.sideItem.get(7).stone.toString()}" />
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+</layout>
