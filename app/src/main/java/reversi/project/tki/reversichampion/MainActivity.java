@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import java.util.HashSet;
+import java.util.Iterator;
+
 import reversi.project.tki.reversichampion.databinding.ActivityMainBinding;
 import reversi.project.tki.reversichampion.board.BoardActivity;
 import reversi.project.tki.reversichampion.frag.FieldActivity;
@@ -34,5 +37,50 @@ public class MainActivity extends AppCompatActivity {
     }
     public void onClickBtn3(View view) {
         startActivity(new Intent(MainActivity.this, FieldActivity.class));
+    }
+
+
+    public void onClickBtn4(View view) {
+
+
+        HashSet<Integer> ssibal = new HashSet<>();
+        ssibal.add(18);
+        ssibal.add(28);
+        ssibal.add(38);
+        ssibal.add(48);
+        ssibal.add(58);
+        ssibal.add(68);
+        Iterator<Integer> iterator = ssibal.iterator();
+
+        StringBuilder gae = new StringBuilder();
+        while (iterator.hasNext()) {
+
+            switch (iterator.next()) {
+                case 18:
+                    break;
+                case 28:
+                    break;
+                case 38:
+                    gae.append(" ");
+                    gae.append(iterator.next());
+                    break;
+                case 48:
+                    break;
+                case 58:
+                    gae.append(" ");
+                    gae.append(iterator.next());
+                    break;
+
+            }
+            gae.append(" ");
+            gae.append(iterator.next());
+
+        }
+
+
+
+        b.tv1.setText(gae);
+
+
     }
 }

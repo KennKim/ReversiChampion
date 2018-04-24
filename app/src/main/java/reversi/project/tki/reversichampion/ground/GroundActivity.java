@@ -9,9 +9,11 @@ import android.util.Log;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import reversi.project.tki.reversichampion.R;
 import reversi.project.tki.reversichampion.databinding.ActivityGroundBinding;
+import reversi.project.tki.reversichampion.model.Around;
 import reversi.project.tki.reversichampion.model.Side;
 import reversi.project.tki.reversichampion.model.Stone;
 
@@ -19,22 +21,28 @@ public class GroundActivity extends AppCompatActivity {
 
     private ActivityGroundBinding b;
     private GroundAdapter mAdapter;
-    public static ArrayList<Stone> items = new ArrayList<>();
+    public static ArrayList<Stone> items;
     public static Byte myStone;
     public static Byte vsStone;
 
     private StoneAsync stoneAsync;
-    public static  ArrayList<Integer> itemsP = new ArrayList<>(); // 뒤집어질 번호.
-    private HashSet<Integer> itemsB = new HashSet<>(); // Button 번호.
+    private ButtonAsync buttonAsync;
+    public static HashSet<Integer> itemsP; // 뒤집어질 번호.
+    public static ArrayList<Around> itemsR; // 뒤집어질 around 번호.
+    private HashSet<Integer> itemsB; // Button 번호.
 
     private static int DELAY_TIME = 100;
-    private static boolean animating;
+    private static boolean lastItem;
+
+    public static int lastNo;
 
 
     @Override
     protected void onDestroy() {
         items.clear();
         itemsP.clear();
+        itemsR.clear();
+        itemsB.clear();
         super.onDestroy();
     }
 
@@ -42,24 +50,35 @@ public class GroundActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         b = DataBindingUtil.setContentView(this, R.layout.activity_ground);
         b.setActivity(this);
 
         mAdapter = new GroundAdapter(this, new GroundAdapter.HitListener() {
             @Override
             public void onHit(Stone stone) {
+
                 items.get(stone.position).stone = GroundActivity.myStone;  // clicked된 번호 items의 stone값 변경.
 
-                sortStone(stone);
+                setItemsP(stone);
+                setRound(stone);
 
                 stoneAsync = new StoneAsync(GroundActivity.this);
                 stoneAsync.execute(100);
+
+
             }
 
             @Override
             public void onFinished() {
 
-                animating = false;
+                for (int p : itemsP) {// 뒤집어진 번호 items의 stone값 변경.
+                    items.get(p).stone = GroundActivity.myStone;
+                }
+
+                InitAsync initAsync = new InitAsync(GroundActivity.this);
+                initAsync.execute(10);
+
             }
         });
 
@@ -73,6 +92,11 @@ public class GroundActivity extends AppCompatActivity {
     }
 
     private void init() {
+
+        items = new ArrayList<>();
+        itemsP = new HashSet<>();
+        itemsR = new ArrayList<>();
+        itemsB = new HashSet<>();
 
         myStone = Stone.WH;
         vsStone = Stone.BL;
@@ -139,14 +163,40 @@ public class GroundActivity extends AppCompatActivity {
 
     }
 
+    private void resetButton() {
+
+        if (itemsB != null && !itemsB.isEmpty()) {
+            List<Integer> list = new ArrayList<>(itemsB);
+
+            for (int i : list) {
+                Stone stone = items.get(i);
+
+                switch (stone.stone) {
+                    case Stone.ENABLE:
+                        stone.stone = Stone.BLANK;
+                        break;
+                    case Stone.BL:
+                    case Stone.WH:
+                        itemsB.remove(i);
+                        break;
+                }
+            }
+        }
+
+/*
+            if (stone.stone.equals(Stone.ENABLE)) {
+                    stone.stone = Stone.BLANK;
+
+            } else if (stone.stone.equals(Stone.BL)||stone.stone.equals(Stone.WH)) {
+                    itemsB.remove(iterator.next());
+
+            }*/
+
+    }
+
     private synchronized void setSide() {
         Log.i("tttt", "setSide sta : " + System.currentTimeMillis());
 
-        for (Stone s : items) {     /* Button 초기화 */
-            if (s.stone.equals(Stone.ENABLE)) {
-                s.stone = Stone.BLANK;
-            }
-        }
 
         for (final Stone s : items) {/* 각 SIDE의 놓여진 stone상태 세팅*/
 
@@ -161,34 +211,38 @@ public class GroundActivity extends AppCompatActivity {
 
     private synchronized void setButton() {
 
+
         Log.i("tttt", "setButton sta : " + System.currentTimeMillis());
 
 
+        int i = 0;
         for (final Stone s : items) {
+
+            if (i == 30) {
+                int a = s.position;
+            }
 
             if (s.stone.equals(Stone.BLANK)) {   /* 현재 돌 상태가 null 경우.*/
 
                 int j = 0;
                 for (Side side : s.sideItem) {
 
-                    if (side.sideNo != null) {
-                        if (checkSideVs(side)) { /*현재방향의 그 다음 돌 = 상대방돌.*/
+                    if (side.stone != null && checkSideVs(side)) {/*현재방향의 그 다음 돌 = 상대방돌.*/
 
-                            Side nextSide = getNextSide(side.sideNo, j);
-                            side.itemsTobeChangedNo.add(side.sideNo); /*현재방향의 돌 저장.*/
+                        Side nextSide = getNextSide(side.sideNo, j);
+                        side.itemsTobeChangedNo.add(side.sideNo); /*현재방향의 돌 저장.*/
 
-                            if (checkcheck(side, nextSide, s)) {
-                                Side nextSide2 = getNextSide(nextSide.sideNo, j);
-                                if (checkcheck(side, nextSide2, s)) {
-                                    Side nextSide3 = getNextSide(nextSide2.sideNo, j);
-                                    if (checkcheck(side, nextSide3, s)) {
-                                        Side nextSide4 = getNextSide(nextSide3.sideNo, j);
-                                        if (checkcheck(side, nextSide4, s)) {
-                                            Side nextSide5 = getNextSide(nextSide4.sideNo, j);
-                                            if (checkcheck(side, nextSide5, s)) {
-                                                Side nextSide6 = getNextSide(nextSide5.sideNo, j);
-                                                checkcheck(side, getNextSide(nextSide6.sideNo, j), s);
-                                            }
+                        if (checkcheck(side, nextSide, s)) {
+                            Side nextSide2 = getNextSide(nextSide.sideNo, j);
+                            if (checkcheck(side, nextSide2, s)) {
+                                Side nextSide3 = getNextSide(nextSide2.sideNo, j);
+                                if (checkcheck(side, nextSide3, s)) {
+                                    Side nextSide4 = getNextSide(nextSide3.sideNo, j);
+                                    if (checkcheck(side, nextSide4, s)) {
+                                        Side nextSide5 = getNextSide(nextSide4.sideNo, j);
+                                        if (checkcheck(side, nextSide5, s)) {
+                                            Side nextSide6 = getNextSide(nextSide5.sideNo, j);
+                                            checkcheck(side, getNextSide(nextSide6.sideNo, j), s);
                                         }
                                     }
                                 }
@@ -198,14 +252,14 @@ public class GroundActivity extends AppCompatActivity {
                     j++;
                 }
             }
-
+            i++;
         }
         Log.i("tttt", "setButton end : " + System.currentTimeMillis());
     }
 
     private boolean checkcheck(Side side, Side nextSide, Stone s) {
         if (checkSideVs(nextSide)) {
-            side.itemsTobeChangedNo.add(nextSide.mainNo);
+            side.itemsTobeChangedNo.add(nextSide.sideNo);
             return true;
         } else if (checkSideMy(nextSide)) {
             s.stone = Stone.ENABLE; /* Button으로 표시 */
@@ -245,8 +299,9 @@ public class GroundActivity extends AppCompatActivity {
             GroundActivity activity = mActivity.get();
 //            activity.mAdapter.notifyDataSetChanged();
 
-            ButtonAsync buttonAsync = new ButtonAsync(activity);
-            buttonAsync.execute(10);
+            // view 변경
+            activity.buttonAsync = new ButtonAsync(activity);
+            activity.buttonAsync.execute(10);
 
         }
 
@@ -256,6 +311,7 @@ public class GroundActivity extends AppCompatActivity {
             GroundActivity activity = mActivity.get();
 
             activity.setMyStone();
+            activity.resetButton();
             activity.setSide();
             activity.setButton();
 
@@ -276,36 +332,47 @@ public class GroundActivity extends AppCompatActivity {
         protected void onPostExecute(Integer integer) {
             super.onPostExecute(integer);
 
-            GroundActivity activity = mActivity.get();
+            lastItem = true;
 
 
-            InitAsync initAsync = new InitAsync(activity);
-            initAsync.execute(10);
+//            GroundActivity activity = mActivity.get();
+//            if (activity == null || activity.isFinishing()) return;
+//
+//            InitAsync initAsync = new InitAsync(activity);
+//            initAsync.execute(10);
         }
 
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
-            animating = true;
+
 
             GroundActivity activity = mActivity.get();
             if (activity == null || activity.isFinishing()) return;
 
-            int no = activity.itemsP.get(values[0]);
-            activity.mAdapter.notifyItemChanged(no);
+            int i = values[0];
+            Around round = itemsR.get(i);
+
+            for (int j : round.items) {
+                activity.mAdapter.notifyItemChanged(j);
+            }
+
+
+//            int no = itemsP.get(values[0]);
+//            activity.mAdapter.notifyItemChanged(no);
 
 
         }
 
         @Override
         protected Integer doInBackground(Integer... integers) {
+
             GroundActivity activity = mActivity.get();
-            if (activity == null || activity.isFinishing()) {
-                return null;
-            }
+            if (activity == null || activity.isFinishing()) return null;
+
 
             int i = 0;
-            while (activity.itemsP.size() > i) {
+            while (itemsR.size() > i) {
 
                 publishProgress(i);
 
@@ -314,6 +381,7 @@ public class GroundActivity extends AppCompatActivity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }*/
+
                 i++;
 
             }
@@ -362,7 +430,7 @@ public class GroundActivity extends AppCompatActivity {
 
     }
 
-    private synchronized void sortStone(Stone stone) {
+    private synchronized void setItemsP(Stone stone) {
 
         itemsP.clear();
 
@@ -378,15 +446,38 @@ public class GroundActivity extends AppCompatActivity {
 
             }
         }
-    }
-
-    private void getAllSideNo(Stone stone) {
 
 
     }
 
+    private synchronized void setRound(Stone stone) {
+
+        itemsR.clear();
+
+//             for (Side s : stone.sideItem) {
+//
+//             }
 
 
+        for (Side s : stone.sideItem) {
+            Byte sideNo = s.sideNo;
+            ArrayList<Integer> items = new ArrayList<>();
+
+            for (int p : itemsP) {
+                if (sideNo.equals((byte) p)) {
+                    items.add(p);
+                    Around round = new Around(items);
+                    itemsR.add(round);
+                }
+            }
+        }
+
+        Around lastR = itemsR.get(itemsR.size() - 1);
+        int lastP = lastR.items.size() - 1;
+        lastNo = lastR.items.get(lastP);
+
+
+    }
 
 
 

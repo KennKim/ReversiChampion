@@ -19,6 +19,7 @@ import reversi.project.tki.reversichampion.model.Stone;
 public class GroundAdapter extends RecyclerView.Adapter<GroundAdapter.GroundViewHolder> {
     interface HitListener {
         void onHit(Stone stone);
+
         void onFinished();
     }
 
@@ -67,6 +68,7 @@ public class GroundAdapter extends RecyclerView.Adapter<GroundAdapter.GroundView
     public void onBindViewHolder(GroundViewHolder h, int p) {
 
         Stone stone = GroundActivity.items.get(p);
+
 
         if (stone.hit) {
             stone.hit = false;
@@ -123,6 +125,7 @@ public class GroundAdapter extends RecyclerView.Adapter<GroundAdapter.GroundView
         private void initStone(Stone stone) {
             switch (stone.stone) {
                 case Stone.BLANK:
+                    b.iv.setImageDrawable(null);
                     return;
                 case Stone.BL:
                     b.iv.setImageDrawable(mContext.getDrawable(R.drawable.frame_black));
@@ -143,7 +146,11 @@ public class GroundAdapter extends RecyclerView.Adapter<GroundAdapter.GroundView
             AnimationDrawable ad = (AnimationDrawable) b.iv.getDrawable();
             ad.start();
 
-            mListener.onFinished();
+
+            if (GroundActivity.lastNo == stone.position) {
+                mListener.onFinished();
+            }
+
 
 //            GroundActivity.items.get(stone.position).stone = GroundActivity.myStone;
 
