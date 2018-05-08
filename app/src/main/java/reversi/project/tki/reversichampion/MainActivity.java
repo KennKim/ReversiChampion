@@ -6,11 +6,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import reversi.project.tki.reversichampion.databinding.ActivityMainBinding;
 import reversi.project.tki.reversichampion.board.BoardActivity;
+import reversi.project.tki.reversichampion.databinding.ActivityMainBinding;
 import reversi.project.tki.reversichampion.frag.FieldActivity;
 import reversi.project.tki.reversichampion.ground.GroundActivity;
 
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     public void onClickBtn2(View view) {
         startActivity(new Intent(MainActivity.this, BoardActivity.class));
     }
+
     public void onClickBtn3(View view) {
         startActivity(new Intent(MainActivity.this, FieldActivity.class));
     }
@@ -78,8 +80,31 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
         b.tv1.setText(gae);
+
+
+        ArrayList<Integer> list123 = new ArrayList<>();
+        list123.add(3);
+        list123.add(34);
+        list123.add(5);
+        list123.add(6);
+
+        for (int step = 0; step < 8; step++) {
+            String assdfdf = "";
+            for (int i : list123) {
+                String asdf = "";
+                int a = 23;
+                for (int b : list123) {
+                    if (i == b) {
+                        int w2a = 9;
+                        break;
+                    }
+                }
+            }
+            int a = 9;
+            int b = a;
+        }
+        int sdfa = 9;
 
 
     }

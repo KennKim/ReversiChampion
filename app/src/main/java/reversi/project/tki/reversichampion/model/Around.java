@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class Around {
 
-    public ArrayList<Integer> items;
+    public ArrayList<Integer> items = new ArrayList<>();
 
 
     public Around(ArrayList<Integer> items) {

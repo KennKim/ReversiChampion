@@ -17,9 +17,9 @@ import reversi.project.tki.reversichampion.model.Stone;
  */
 
 public class GroundAdapter extends RecyclerView.Adapter<GroundAdapter.GroundViewHolder> {
+
     interface HitListener {
         void onHit(Stone stone);
-
         void onFinished();
     }
 
@@ -94,7 +94,7 @@ public class GroundAdapter extends RecyclerView.Adapter<GroundAdapter.GroundView
         ViewHolderGroundBinding b;
         private Stone stone;
 
-        GroundViewHolder(View itemView) {
+        public GroundViewHolder(View itemView) {
             super(itemView);
             b = DataBindingUtil.bind(itemView);
             b.setHolder(this);

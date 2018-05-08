@@ -28,7 +28,7 @@ public class GroundActivity extends AppCompatActivity {
     private StoneAsync stoneAsync;
     private ButtonAsync buttonAsync;
     public static HashSet<Integer> itemsP; // 뒤집어질 번호.
-    public static ArrayList<Around> itemsR; // 뒤집어질 around 번호.
+    public static ArrayList<Around> itemsR; // 뒤집어질 aroundItems 번호.
     private HashSet<Integer> itemsB; // Button 번호.
 
     private static int DELAY_TIME = 100;
@@ -60,8 +60,8 @@ public class GroundActivity extends AppCompatActivity {
 
                 items.get(stone.position).stone = GroundActivity.myStone;  // clicked된 번호 items의 stone값 변경.
 
-                setItemsP(stone);
                 setRound(stone);
+                setItemsP(stone);
 
                 stoneAsync = new StoneAsync(GroundActivity.this);
                 stoneAsync.execute(100);
@@ -110,42 +110,42 @@ public class GroundActivity extends AppCompatActivity {
     private void setBoard() {
 
         Log.i("tttt", " : InitThread sta" + System.currentTimeMillis());
-        for (Byte i = 0; i < 64; i++) {
+        for (Byte no = 0; no < 64; no++) {
 
             Stone stone = new Stone();
-            stone.position = i;
-            stone.sideItem.add(new Side(i, (byte) (i - 9)));
-            stone.sideItem.add(new Side(i, (byte) (i - 8)));
-            stone.sideItem.add(new Side(i, (byte) (i - 7)));
-            stone.sideItem.add(new Side(i, (byte) (i - 1)));
-            stone.sideItem.add(new Side(i, (byte) (i + 1)));
-            stone.sideItem.add(new Side(i, (byte) (i + 7)));
-            stone.sideItem.add(new Side(i, (byte) (i + 8)));
-            stone.sideItem.add(new Side(i, (byte) (i + 9)));
+            stone.position = no;
+            stone.sideItem.add(new Side(no, (byte) (no - 9)));
+            stone.sideItem.add(new Side(no, (byte) (no - 8)));
+            stone.sideItem.add(new Side(no, (byte) (no - 7)));
+            stone.sideItem.add(new Side(no, (byte) (no - 1)));
+            stone.sideItem.add(new Side(no, (byte) (no + 1)));
+            stone.sideItem.add(new Side(no, (byte) (no + 7)));
+            stone.sideItem.add(new Side(no, (byte) (no + 8)));
+            stone.sideItem.add(new Side(no, (byte) (no + 9)));
 
                 /* Side의 테이블 밖 영역 null처리*/
-            if (i % 8 == 0 || i < 8) {
+            if (no % 8 == 0 || no < 8) {
                 stone.sideItem.get(0).sideNo = null;
             }
-            if (i < 8) {
+            if (no < 8) {
                 stone.sideItem.get(1).sideNo = null;
             }
-            if ((i + 1) % 8 == 0 || i < 8) {
+            if ((no + 1) % 8 == 0 || no < 8) {
                 stone.sideItem.get(2).sideNo = null;
             }
-            if (i % 8 == 0) {
+            if (no % 8 == 0) {
                 stone.sideItem.get(3).sideNo = null;
             }
-            if ((i + 1) % 8 == 0) {
+            if ((no + 1) % 8 == 0) {
                 stone.sideItem.get(4).sideNo = null;
             }
-            if (i % 8 == 0 || i > 55) {
+            if (no % 8 == 0 || no > 55) {
                 stone.sideItem.get(5).sideNo = null;
             }
-            if (i > 55) {
+            if (no > 55) {
                 stone.sideItem.get(6).sideNo = null;
             }
-            if ((i + 1) % 8 == 0 || i > 55) {
+            if ((no + 1) % 8 == 0 || no > 55) {
                 stone.sideItem.get(7).sideNo = null;
             }
 
@@ -358,10 +358,6 @@ public class GroundActivity extends AppCompatActivity {
             }
 
 
-//            int no = itemsP.get(values[0]);
-//            activity.mAdapter.notifyItemChanged(no);
-
-
         }
 
         @Override
@@ -383,7 +379,6 @@ public class GroundActivity extends AppCompatActivity {
                 }*/
 
                 i++;
-
             }
             return null;
         }
@@ -430,10 +425,137 @@ public class GroundActivity extends AppCompatActivity {
 
     }
 
+
+    private synchronized void setRound(Stone stone) {
+
+
+        if (stone.aroundItems == null) {
+            stone.aroundItems = new ArrayList<>();
+        } else {
+            stone.aroundItems.clear();
+        }
+
+        ArrayList<Boolean> switchItems = getSideSwitch();
+
+        for (int step = 1; step < 8; step++) {
+            ArrayList<Integer> list = new ArrayList<>();
+            for (int d = 0; d < 8; d++) {
+                if (!switchItems.get(d)) {
+                    Integer no = getSideNo(d, step, stone.position); /* setRound */
+                    if (no != null) {
+                        list.add(no);
+                        switchItems.set(d, isSideCompleted(d, no));
+                    }
+                }
+            }
+
+            if (!list.isEmpty()) {
+                Around around = new Around(list);
+                stone.aroundItems.add(around);
+            }
+        }
+
+        /**
+         *  todo: async 시간차 확인 할 것.
+         *  aroundItems 수정되면 게임 진행되는지 확인 할 것.
+         *
+         *
+         */
+
+
+    }
+
+    private int getRoundCount(int lastNo) {
+        return 99;
+    }
+
+    /**
+     * Side 정리를 위한 스위치 만들기.
+     *
+     * @return
+     */
+    private ArrayList<Boolean> getSideSwitch() {
+        ArrayList<Boolean> switchItems = new ArrayList<>();
+        for (int i = 0; i < 8; i++) {
+            switchItems.add(false);
+        }
+        return switchItems;
+    }
+
+    private boolean isSideCompleted(int direction, int no) {
+        switch (direction) {
+            case 0:
+            case 3:
+            case 5:
+                if (no % 8 == 0) {
+                    return true;
+                }
+            case 1:
+                if (0 <= no && no <= 7) {
+                    return true;
+                }
+                break;
+            case 2:
+            case 4:
+            case 7:
+                if ((no + 1) % 8 == 0) {
+                    return true;
+                }
+            case 6:
+                if (56 <= no && no <= 63) {
+                    return true;
+                }
+        }
+
+        return false;
+    }
+
+
+    private Integer getSideNo(int direction, int step, int no) {
+
+        Integer result = null;
+        switch (direction) {
+            case 0:
+                result = no % 8 == 0 || no < 8 ? null : no - 9 * step;
+                break;
+            case 1:
+                result = no < 8 ? null : no - 8 * step;
+                break;
+            case 2:
+                result = (no + 1) % 8 == 0 || no < 8 ? null : no - 7 * step;
+                break;
+            case 3:
+                result = no % 8 == 0 ? null : no - 1 * step;
+                break;
+            case 4:
+                result = (no + 1) % 8 == 0 ? null : no + 1 * step;
+                break;
+            case 5:
+                result = no % 8 == 0 || no > 55 ? null : no + 7 * step;
+                break;
+            case 6:
+                result = no > 55 ? null : no + 8 * step;
+                break;
+            case 7:
+                result = (no + 1) % 8 == 0 || no > 55 ? null : no + 9 * step;
+                break;
+        }
+
+        if (result != null && !isBoundary(result)) {
+            result = null;
+        }
+
+        return result;
+    }
+
+    private boolean isBoundary(int result) {
+        return result >= 0 && result < 64;
+    }
+
+
     private synchronized void setItemsP(Stone stone) {
 
         itemsP.clear();
-
         for (Side s : stone.sideItem) {
 
             for (int no : s.itemsTobeChangedNo) {
@@ -448,29 +570,31 @@ public class GroundActivity extends AppCompatActivity {
         }
 
 
-    }
-
-    private synchronized void setRound(Stone stone) {
-
         itemsR.clear();
+        for (Around a : stone.aroundItems) {
 
-//             for (Side s : stone.sideItem) {
-//
-//             }
+            ArrayList<Integer> list = new ArrayList<>();
 
-
-        for (Side s : stone.sideItem) {
-            Byte sideNo = s.sideNo;
-            ArrayList<Integer> items = new ArrayList<>();
-
-            for (int p : itemsP) {
-                if (sideNo.equals((byte) p)) {
-                    items.add(p);
-                    Around round = new Around(items);
-                    itemsR.add(round);
+            for (Side s : stone.sideItem) {
+                for (int cNo : s.itemsTobeChangedNo) {
+                    for (int p : a.items) {
+                        if (cNo == p) {
+                            list.add(p);
+                            /*if (s.itemsTobeChangedNo.size() == 1) {
+                                break;
+                            } else {
+                                s.itemsTobeChangedNo.remove(cNo);
+                            }*/
+                        }
+                    }
                 }
             }
+            if (!list.isEmpty()) {
+                Around around = new Around(list);
+                itemsR.add(around);
+            }
         }
+
 
         Around lastR = itemsR.get(itemsR.size() - 1);
         int lastP = lastR.items.size() - 1;
@@ -479,9 +603,16 @@ public class GroundActivity extends AppCompatActivity {
 
     }
 
+    private void addListAndRemoveCno(ArrayList<Integer> list, int d, int cNo, int step, Stone stone) {
 
+        for (int p : stone.aroundItems.get(step).items) {
+            if (cNo == p) {
+                list.add(p);
+                stone.sideItem.get(d).itemsTobeChangedNo.remove(p);
+            }
+        }
 
-
+    }
 
 
 

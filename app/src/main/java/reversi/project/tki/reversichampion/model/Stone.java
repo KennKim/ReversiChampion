@@ -20,10 +20,11 @@ public class Stone {
     public int position;
     public ArrayList<Side> sideItem = new ArrayList<>();
 
+    public ArrayList<Around> aroundItems = new ArrayList<>();
+
 
     public Stone() {
     }
-
 
 
 }
